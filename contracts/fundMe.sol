@@ -5,7 +5,7 @@ pragma solidity >=0.6.0 <0.9.0;
 //imports from @chainlink npm package, interface instead of contract
 //interfaces complie down to ABI (application binary interface)
 //allows to interact with listed funcions in another contract
-import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
 
 contract fundMe {
     mapping(address => uint256) public addrToAmo;
