@@ -8,6 +8,12 @@ module.exports = {
     {version: 
       "0.8.17",
     settings: {},}
-  ]}
-
+  ]},
+  networks: {
+    hardhat: {
+      forking: {
+        url: process.env.ALCHEMY_MAINNET_RPC_URL
+      }
+    }
+  }
 };
