@@ -17,6 +17,15 @@
     "typechain": "^8.1.0"
   },
   "dependencies": {
-    "@chainlink/contracts": "^0.5.1"
-  }
+    "@chainlink/contracts": "^0.5.1",
+    "dotenv": "^16.0.3"
+  },
+  "scripts": {
+    "start": "yarn hardhat 1_storage.sol",
+    "start[dev]": "yarn hardhat 1_storage.sol"
+  },
+  "name": "blockchain",
+  "version": "1.0.0",
+  "author": "Farhan Absar",
+  "license": "MIT"
 }
