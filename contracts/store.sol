@@ -6,7 +6,7 @@ pragma solidity >=0.6.0 <0.9.0;
 //pragma solidity ^0.6.0; 
 
 //contract is like a class in javascript
-contract stored {
+contract Stored {
     
     // initializes favNum to 0
     // contract state variables are stored at indexes
@@ -49,7 +49,8 @@ contract stored {
     //address favAdr = 0x456;
     bytes32 favByt = "cat";
 
-    function store(uint256 _Num) public {
+    // virtual keyword makes the function overrideable by child contracts
+    function store(uint256 _Num) public virtual {
         Num = _Num;
     }
 

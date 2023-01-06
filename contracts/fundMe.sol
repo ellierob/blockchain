@@ -7,7 +7,7 @@ pragma solidity >=0.6.0 <0.9.0;
 //allows to interact with listed funcions in another contract
 import "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
 
-contract fundMe {
+contract FundMe {
     mapping(address => uint256) public addrToAmo;
     address[] public funders;
     address public owner;
@@ -30,7 +30,13 @@ contract fundMe {
         //    revert?
         //}
 
-        require(getRate(msg.value) >= minUSD, "More ETH required");
+        // any transaction before 
+        require(
+            getRate(msg.value) >= minUSD,
+            
+            // message if requirement is not met
+            "More ETH required"
+            );
 
         addrToAmo[msg.sender] += msg.value;
 

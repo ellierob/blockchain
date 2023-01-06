@@ -9,8 +9,11 @@
         "version": "0.8.17",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 200,
+            "details": {
+              "yul": false
+            }
           },
           "outputSelection": {
             "*": {
@@ -37,15 +40,18 @@
       ]
     },
     "/mnt/f/Documents/chhatak_companiganj/slot/sufi/mystic_gnostic_sethian_demiurgic_kabbalah_samaritan/golem/blockchain/contracts/2_Owner.sol": {
-      "lastModificationDate": 1664443587061,
+      "lastModificationDate": 1672940755112,
       "contentHash": "e27a502c32aa582c69c999c0eed4ba40",
       "sourceName": "contracts/2_Owner.sol",
       "solcConfig": {
         "version": "0.8.17",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 200,
+            "details": {
+              "yul": false
+            }
           },
           "outputSelection": {
             "*": {
@@ -81,8 +87,11 @@
         "version": "0.8.17",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 200,
+            "details": {
+              "yul": false
+            }
           },
           "outputSelection": {
             "*": {
@@ -116,8 +125,11 @@
         "version": "0.8.17",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 200,
+            "details": {
+              "yul": false
+            }
           },
           "outputSelection": {
             "*": {
@@ -151,8 +163,11 @@
         "version": "0.8.17",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 200,
+            "details": {
+              "yul": false
+            }
           },
           "outputSelection": {
             "*": {
@@ -179,15 +194,18 @@
       ]
     },
     "/mnt/f/Documents/chhatak_companiganj/slot/sufi/mystic_gnostic_sethian_demiurgic_kabbalah_samaritan/golem/blockchain/contracts/storageFactory.sol": {
-      "lastModificationDate": 1664443587070,
-      "contentHash": "b1774d1cd8ff9fabb1a1c9112d429a01",
+      "lastModificationDate": 1673018026926,
+      "contentHash": "276a93c6e8a49e5fbd162b96c02c9af4",
       "sourceName": "contracts/storageFactory.sol",
       "solcConfig": {
         "version": "0.8.17",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 200,
+            "details": {
+              "yul": false
+            }
           },
           "outputSelection": {
             "*": {
@@ -212,20 +230,22 @@
         ">=0.6.0 <0.9.0"
       ],
       "artifacts": [
-        "storFact",
-        "storFact2"
+        "StorFact"
       ]
     },
     "/mnt/f/Documents/chhatak_companiganj/slot/sufi/mystic_gnostic_sethian_demiurgic_kabbalah_samaritan/golem/blockchain/contracts/store.sol": {
-      "lastModificationDate": 1672897163856,
-      "contentHash": "5d765730162b67397157878efc5837e4",
+      "lastModificationDate": 1673002761580,
+      "contentHash": "48a72a706249e272bd6be084bb4d22f9",
       "sourceName": "contracts/store.sol",
       "solcConfig": {
         "version": "0.8.17",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 200,
+            "details": {
+              "yul": false
+            }
           },
           "outputSelection": {
             "*": {
@@ -248,12 +268,52 @@
         ">=0.6.0 <0.9.0"
       ],
       "artifacts": [
-        "stored"
+        "Stored"
+      ]
+    },
+    "/mnt/f/Documents/chhatak_companiganj/slot/sufi/mystic_gnostic_sethian_demiurgic_kabbalah_samaritan/golem/blockchain/contracts/storeChild.sol": {
+      "lastModificationDate": 1673017047704,
+      "contentHash": "44388d47fdf2d26e5d60c7509ee88064",
+      "sourceName": "contracts/storeChild.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200,
+            "details": {
+              "yul": false
+            }
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./store.sol"
+      ],
+      "versionPragmas": [
+        ">=0.6.0 <0.9.0"
+      ],
+      "artifacts": [
+        "StorFactChild"
       ]
     },
     "/mnt/f/Documents/chhatak_companiganj/slot/sufi/mystic_gnostic_sethian_demiurgic_kabbalah_samaritan/golem/blockchain/contracts/fundMe.sol": {
-      "lastModificationDate": 1664446916891,
-      "contentHash": "ce0a13e1773e84b49297ec6f6564bb2d",
+      "lastModificationDate": 1673019910381,
+      "contentHash": "d1a9ebd3738765ceeb74619dc466f00a",
       "sourceName": "contracts/fundMe.sol",
       "solcConfig": {
         "version": "0.6.6",
@@ -285,7 +345,7 @@
         ">=0.6.0 <0.9.0"
       ],
       "artifacts": [
-        "fundMe"
+        "FundMe"
       ]
     },
     "/mnt/f/Documents/chhatak_companiganj/slot/sufi/mystic_gnostic_sethian_demiurgic_kabbalah_samaritan/golem/blockchain/node_modules/@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol": {
@@ -324,7 +384,7 @@
       ]
     },
     "/mnt/f/Documents/chhatak_companiganj/slot/sufi/mystic_gnostic_sethian_demiurgic_kabbalah_samaritan/golem/blockchain/contracts/safeMath.sol": {
-      "lastModificationDate": 1664447218910,
+      "lastModificationDate": 1673018022173,
       "contentHash": "3041fb860f789d1937e7ac31c99d7ca0",
       "sourceName": "contracts/safeMath.sol",
       "solcConfig": {
