@@ -3,6 +3,8 @@ require("@nomicfoundation/hardhat-toolbox");
 // require("@nomiclabs/hardhat-ethers");
 require("dotenv").config();
 
+// remixd -s <'$gol/blockchain'> --remix-ide https://remix.ethereum.org;
+
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: { 
