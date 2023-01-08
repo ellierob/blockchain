@@ -10,6 +10,8 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 import "./priceConverter.sol";
 
+// custom revert errors stored outside contracts
+// takes less gas than require
 error notOwner();
 
 contract FundMe {
@@ -74,6 +76,8 @@ contract FundMe {
     // only owner
     modifier onlyOwner() {
         if(
+        // custom error reverts stored outside contract
+        // takes less gas than require
         // require(
             msg.sender == owner
             // ,'You are not the owner');
