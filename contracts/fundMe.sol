@@ -46,6 +46,11 @@ contract FundMe {
         priceFeed = AggregatorV3Interface(_priceFeedAddress);
     }
 
+    // special functions: "receive", "fallback"
+    receive() external payable {
+        fund();
+    }
+
     //'payable' keyword makes a function payable (red)
     function fund() public payable {
 
