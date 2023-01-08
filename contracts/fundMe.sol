@@ -46,8 +46,16 @@ contract FundMe {
         priceFeed = AggregatorV3Interface(_priceFeedAddress);
     }
 
-    // special functions: "receive", "fallback"
+    // special functions: "receive"
+    // called when call data empty
     receive() external payable {
+        fund();
+    }
+
+    // special functions: "fallback"
+    // called when no defined receive function when call data empty
+    // and when invalid call data method
+    fallback() external payable {
         fund();
     }
 
