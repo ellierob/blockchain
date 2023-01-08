@@ -10,6 +10,8 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 import "./priceConverter.sol";
 
+error notOwner();
+
 contract FundMe {
 
     // makes 'PriceConverter' library functions methods of uint256
@@ -71,10 +73,11 @@ contract FundMe {
     // like middleware
     // only owner
     modifier onlyOwner() {
-        require(
-            msg.sender == owner,
-            'You are not the owner'
-            );
+        if(
+        // require(
+            msg.sender == owner
+            // ,'You are not the owner');
+        ){revert notOwner();}
         //runs the modified function /code after the require statement
         _;
     }
