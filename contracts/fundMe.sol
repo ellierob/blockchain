@@ -88,13 +88,11 @@ contract FundMe {
     // like middleware
     // only owner
     modifier onlyOwner() {
-        if(
+        if(msg.sender != owner){revert notOwner();}
         // custom error reverts stored outside contract
         // takes less gas than require
-        // require(
-            msg.sender == owner
-            // ,'You are not the owner');
-        ){revert notOwner();}
+        // require(msg.sender == owner,'You are not the owner');
+        
         //runs the modified function /code after the require statement
         _;
     }
