@@ -18,7 +18,7 @@ describe("store", function () {
         const expectedValue = 0;
 
         assert.equal(Num.toString(), expectedValue);
-        // expect.equal(Num, expectedValue);
+        // expect(Num.toString()).to.equal(expectedValue);
     });
 
     it.only("should update", async () => {

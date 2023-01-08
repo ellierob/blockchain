@@ -51,5 +51,9 @@ module.exports = {
   },
   gasReporter: {
     enabled: true,
+    // outputFile: "gas-report.txt",
+    noColours: true,
+    currency: "BDT",
+    coinmarketcap: process.env.COINMARKETCAP_API_KEY,
   }
 };
