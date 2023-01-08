@@ -19,11 +19,13 @@
   "dependencies": {
     "@chainlink/contracts": "^0.5.1",
     "@remix-project/remixd": "^0.6.10",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "solc": "^0.8.17"
   },
   "scripts": {
     "start": "yarn hardhat 1_storage.sol",
-    "start[dev]": "yarn hardhat 1_storage.sol"
+    "start[dev]": "yarn hardhat 1_storage.sol",
+    "compile": "yarn solcjs --bin --abi --include-path $gol/blockchain/node_modules/ --base-path $gol/blockchain/ -o $gol/blockchain//articats/contracts/"
   },
   "name": "blockchain",
   "version": "1.0.0",

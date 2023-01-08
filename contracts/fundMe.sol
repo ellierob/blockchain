@@ -15,12 +15,11 @@ import "./priceConverter.sol";
 error notOwner();
 
 contract FundMe {
-
     // makes 'PriceConverter' library functions methods of uint256
     using PriceConverter for uint256;
 
     // variables that will be constant after once set
-    // constants and immutables store directly in bytecode at deploy, 
+    // constants and immutables store directly in bytecode at deploy,
     // rather than storage slot
     // address public immutable owner;
     address public owner;
@@ -28,7 +27,7 @@ contract FundMe {
     address[] public funders;
 
     AggregatorV3Interface private priceFeed;
-    
+
     mapping(address => uint256) public funderToAmo;
 
     //$2 seen raised to 10 ** 18
@@ -61,22 +60,19 @@ contract FundMe {
 
     //'payable' keyword makes a function payable (red)
     function fund() public payable {
-
-        
         //if statement can be replaced by shorter required statement
         //if(msg.value < MINUSD){
         //    revert?
         //}
 
-        // any transaction before 
+        // any transaction before
         require(
             // valueInUSD(msg.value) >= MINUSD,
             // first argument of library functions is same as caller
             msg.value.valueInUSD(priceFeed) >= MINUSD,
-            
             // message if requirement is not met
             "More ETH required"
-            );
+        );
 
         funderToAmo[msg.sender] = msg.value;
 
@@ -88,39 +84,38 @@ contract FundMe {
     // like middleware
     // only owner
     modifier onlyOwner() {
-        if(msg.sender != owner){revert notOwner();}
+        if (msg.sender != owner) {
+            revert notOwner();
+        }
         // custom error reverts stored outside contract
         // takes less gas than require
         // require(msg.sender == owner,'You are not the owner');
-        
+
         //runs the modified function /code after the require statement
         _;
     }
 
-    function wdraw() onlyOwner public {
-        
+    function wdraw() public onlyOwner {
         //keyword 'this' refers to contract
         //whose balance is transfered
         //to sender /caller
 
         // transfer automatically reverts if send fails
         // payable(msg.sender).transfer(address(this).balance);
-        
+
         // call is powerful low lever function
         // allows sending token without gas
         // allows calling methods on contracts
         // but also can modify properties on addresses
-        (bool success,) = payable(msg.sender).call{value: address(this).balance}("");
-        
+        (bool success, ) = payable(msg.sender).call{
+            value: address(this).balance
+        }("");
+
         // bool success = payable(msg.sender).send(address(this).balance);
 
-        require(
-            success,
-            "Send failed"
-        );
-        
+        require(success, "Send failed");
 
-        for (uint256 funderInd=0; funderInd<funders.length; funderInd++){
+        for (uint256 funderInd = 0; funderInd < funders.length; funderInd++) {
             address funder = funders[funderInd];
             funderToAmo[funder] = 0;
         }
@@ -129,10 +124,9 @@ contract FundMe {
         funders = new address[](0);
     }
 
-    function changeOwner(address _newOwner) onlyOwner public {
+    function changeOwner(address _newOwner) public onlyOwner {
         owner = _newOwner;
     }
-    
 
     // function getVer() public view returns (uint256){
     //     AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
@@ -141,10 +135,10 @@ contract FundMe {
 
     // function ethToUSD() public view returns(uint256) {
     //     AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
-        
+
     //     //commas without variable in tuple to ignore variables
     //     (,int256 answer,,,) = priceFeed.latestRoundData();
-        
+
     //     return uint256(answer);
     // }
 
@@ -152,5 +146,5 @@ contract FundMe {
     //     uint256 ethPrice = ethToUSD();
     //     uint256 ethInUsd = (ethPrice * _ethAmo) /100000000;
     //     return ethInUsd;
-    // } 
+    // }
 }

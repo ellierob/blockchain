@@ -7,7 +7,6 @@
 // const hre = require("hardhat");
 const { ethers } = require("hardhat");
 const fs = require("fs-extra");
-require("dotenv").config();
 // const ethers = require("ethers");
 
 async function main() {
@@ -17,27 +16,11 @@ async function main() {
         "http://127.0.0.1:8545"
     );
 
-
-    // wallet from encrypted key
-
-    const encryptedJson = fs.readFileSync(
-        "./.encryptedKey.json", "utf-8"
+    const wallet = new ethers.Wallet(
+        // private key of waller
+        process.env.GANACHE_PRIVATE_KEY,
+        provider
     );
-
-    let wallet = new ethers.Wallet.fromEncryptedJsonSync(
-        encryptedJson,
-        proces.env.CODEC_PASS
-    )
-
-    wallet = await wallet.connect(provider);
-
-    // const wallet =
-    //     new ethers.Wallet(
-    //         // private key of waller
-    //         process.env.GANACHE_PRIVATE_KEY,
-    //         provider
-    //     );
-
 
     const abiDir = "../artifacts/contracts";
     const contractABI = "fundMe.sol/FundMe.json";
@@ -53,7 +36,7 @@ async function main() {
         "utf-8"
     );
 
-    const contractFactory = await ethers.getContractFactory(abi, binary, wallet);
+    // const contractFactory = await ethers.getContractFactory(abi, binary, wallet);
 
     // const Contract = await ethers.getContractFactory("FundMe");
 
@@ -64,33 +47,35 @@ async function main() {
     //   const lockedAmount = hre.ethers.utils.parseEther("1");
 
     console.log(`Deploying`);
-    const contract = await contractFactory.deploy(
-        // unlockTime, { value: lockedAmount }
-    );
 
-    const deployResponse = contract.deployTransaction
-    console.log(`\n deployment (transaction response): \n`);
-    console.log(deployResponse);
+    const txRaw = {
+        nonce: await wallet.getTransactionCount(),
+        gasPrice: 20000000000,
+        gasLimit: 100000,
+        to: null,
+        value: 0,
+        data:
+            binary
+        // "0xBin"
+        ,
+        chainId: 1337,
+    };
 
-    // waits for 1 block confirmation
-    const transactionReceipt = await deployResponse.wait(1);
-    console.log('\n transaction receipt: \n');
-    console.log(transactionReceipt);
+    const txSigned = await wallet.signTransaction(tx);
 
-    const minUSD = await contract.minUSD.toString();
+    console.log('\n signed transaction: \n', txSigned);
 
-    console.log(`Minimum USD is:`, minUSD);
+    const txSent = await wallet.sendTransaction(
+        // txSigned
+        tx
+    )
 
-
-    let owner, addr1, addr2;
-
-    [owner, addr1, addr2, _] = ethers.getSigners();
-
-    await contract.deployed();
+    console.log(`\n sent transaction: \n`, sentTx);
 
     console.log(
         `at ${unlockTime} deployed to ${contract.address} by ${owner}`
     );
+
 }
 
 // We recommend this pattern to be able to use async/await everywhere
