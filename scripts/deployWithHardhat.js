@@ -21,7 +21,7 @@ async function main() {
     // wallet from encrypted key
 
     const encryptedJson = fs.readFileSync(
-        "./.encryptedKey.json", "utf-8"
+        "$gol/blockchain/.encryptedKey.json", "utf-8"
     );
 
     let wallet = new ethers.Wallet.fromEncryptedJsonSync(

@@ -13,13 +13,16 @@ async function main() {
 
     const provider = new ethers.providers.JsonRpcProvider(
         // blockchain node: hardhat /ganache
-        "http://127.0.0.1:8545"
+        process.env.LOCAL_TESTNET_RPC
     );
 
-    const wallet = new ethers.Wallet(
-        // private key of waller
-        process.env.GANACHE_PRIVATE_KEY,
-        provider
+    const encryptedJson = fs.readFileSync(
+        "$gol/blockchain/.encryptedKey.json", "utf-8"
+    );
+
+    let wallet = new ethers.Wallet.fromEncryptedJsonSync(
+        encryptedJson,
+        proces.env.CODEC_PASS
     );
 
     const abiDir = "../artifacts/contracts";

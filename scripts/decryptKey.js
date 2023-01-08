@@ -4,7 +4,7 @@ require("dotenv").config()
 
 async function main() {
     const encryptedJson = fs.readFileSync(
-        "./.encryptedKey.json", "utf-8"
+        "$gol/blockchain/.encryptedKey.json", "utf-8"
     );
 
 
