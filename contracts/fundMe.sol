@@ -15,6 +15,10 @@ contract FundMe {
     // makes 'PriceConverter' library functions methods of uint256
     using PriceConverter for uint256;
 
+    // variables that will be constant after once set
+    // constants and immutables store directly in bytecode at deploy, 
+    // rather than storage slot
+    // address public immutable owner;
     address public owner;
 
     address[] public funders;
@@ -25,7 +29,9 @@ contract FundMe {
 
     //$2 seen raised to 10 ** 18
     //6000000 gwei
-    uint256 public constant minUSD = 2000000000000000000;
+    // setting constants take less less gas
+    // constants are all-caps
+    uint256 public constant MINUSD = 2000000000000000000;
 
     // 0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e
     // eth to usd pricefeed address from
@@ -41,15 +47,15 @@ contract FundMe {
 
         
         //if statement can be replaced by shorter required statement
-        //if(msg.value < minUSD){
+        //if(msg.value < MINUSD){
         //    revert?
         //}
 
         // any transaction before 
         require(
-            // valueInUSD(msg.value) >= minUSD,
+            // valueInUSD(msg.value) >= MINUSD,
             // first argument of library functions is same as caller
-            msg.value.valueInUSD(priceFeed) >= minUSD,
+            msg.value.valueInUSD(priceFeed) >= MINUSD,
             
             // message if requirement is not met
             "More ETH required"
@@ -73,7 +79,7 @@ contract FundMe {
         _;
     }
 
-    function wdraw() payable onlyOwner public {
+    function wdraw() onlyOwner public {
         
         //keyword 'this' refers to contract
         //whose balance is transfered

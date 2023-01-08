@@ -17,8 +17,8 @@ contract safeMathTest {
         // is more gas efficient
         // if certain number won't get too big
         // or big number won't matter
-        unchecked {
+        // unchecked {
             bigNum++;
-        }
+        // }
     }
 }
