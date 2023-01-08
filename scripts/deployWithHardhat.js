@@ -14,7 +14,8 @@ async function main() {
 
     const provider = new ethers.providers.JsonRpcProvider(
         // blockchain node: hardhat /ganache
-        process.env.LOCAL_TESTNET_RPC
+        // process.env.LOCAL_TESTNET_RPC
+        process.env.ALCHEMY_GOERLI_TESTNET_RPC_URL
     );
 
 
@@ -34,7 +35,8 @@ async function main() {
     // const wallet =
     //     new ethers.Wallet(
     //         // private key of waller
-    //         process.env.GANACHE_PRIVATE_KEY,
+    //         // process.env.GANACHE_PRIVATE_KEY,
+    //         process.env.TEST_PRIVATE_KEY,
     //         provider
     //     );
 
