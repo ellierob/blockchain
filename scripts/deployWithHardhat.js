@@ -5,7 +5,7 @@
 // will compile your contracts, add the Hardhat Runtime Environment's members to the
 // global scope, and execute the script.
 // const hre = require("hardhat");
-const { ethers } = require("hardhat");
+const { ethers, run, network } = require("hardhat");
 const fs = require("fs-extra");
 require("dotenv").config();
 // const ethers = require("ethers");
@@ -40,45 +40,67 @@ async function main() {
     //         provider
     //     );
 
-
-    const abiDir = "/home/gnostic/Golem/blockchain/artifacts/contracts/";
-    const contractABI =
-        // "store.sol/Stored.json";
-        "contracts_store_sol_Stored.abi";
-    const contractBin =
-        // "store.sol/Stored.dbg.json";
-        "contracts_store_sol_Stored.bin";
-
-    const abi = fs.readFileSync(
-        abiDir + contractABI,
-        "utf8"
-    );
-
-    const binary = fs.readFileSync(
-        abiDir + contractBin,
-        "utf-8"
-    );
-
-    const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
+    const contractFactory = await ethers.getContractFactory("Stored");
 
     console.log(`Deploying`);
     const contract = await contractFactory.deploy(
         // unlockTime, { value: lockedAmount }
     );
 
-    const deployResponse = contract.deployTransaction
-    console.log(`\n deployment (transaction response): \n`);
-    console.log(deployResponse);
+    // const deployResponse = contract.deployTransaction
+    // console.log(`\n deployment (transaction response): \n`);
+    // console.log(deployResponse);
 
-    // waits for 1 block confirmation
-    const transactionReceipt = await deployResponse.wait(1);
-    console.log('\n transaction receipt: \n');
-    console.log(transactionReceipt);
+    // // waits for 1 block confirmation
+    // const transactionReceipt = await deployResponse.wait(1);
+    // console.log('\n transaction receipt: \n');
+    // console.log(transactionReceipt);
+
+    const contactAddr = await contract.address;
+
+    const deployer = await contract.signer.getAddress();
+
+    console.log(`contract deployed at ${contactAddr} by ${deployer}`);
+
+    if (network.chainId == 5 && process.env.ETHERSCAN_API_KEY) {
+        await contract.deployTransaction.wait(6);
+        verify(contactAddr, []);
+    }
 
     const Num = await contract.Num();
 
     console.log(`stored Number is:`, Num.toString());
 
+    const txResp = await contract.store(4);
+
+    await txResp.wait(1);
+
+    const updatedNum = await contract.Num();
+
+    console.log(`updated Number is:`, updatedNum.toString());
+
+}
+
+async function verify(_contractAdr, args) {
+
+    console.log(`Verifying contract`);
+
+    try {
+        await run(
+            "verify:verify",
+            {
+                address: _contractAdr,
+                constructorArguments: args
+            }
+        );
+    } catch (er) {
+        if (er.message.toLowerCase().includes("already verified")) {
+            console.log(`Already verified`);
+        } else {
+            // throw Error(er.message);
+            console.log(er.message);
+        }
+    }
 }
 
 // We recommend this pattern to be able to use async/await everywhere
