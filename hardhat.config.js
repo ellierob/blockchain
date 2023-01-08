@@ -5,22 +5,22 @@ require("dotenv").config();
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  solidity: { 
-    compilers: [{
-      version: "0.6.6",
-    },{
-      version: "0.8.17",
-      settings: {
-        optimizer: {
-          enabled: true,
-          runs: 200,
-          details: {yul: false}
-        }
-      },
-    }]
+  solidity: {
+    compilers: [
+      // {version: "0.6.6",}, 
+      {
+        version: "0.8.17",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+            details: { yul: false }
+          }
+        },
+      }]
   },
   networks: {
-    goerliAlchemy :{
+    goerliAlchemy: {
       live: true,
       saveDeployments: true,
       deploy: ['deploy-goerliAlchemy/'],
