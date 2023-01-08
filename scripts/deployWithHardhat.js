@@ -14,19 +14,19 @@ async function main() {
 
     const provider = new ethers.providers.JsonRpcProvider(
         // blockchain node: hardhat /ganache
-        "http://127.0.0.1:8545"
+        process.env.LOCAL_TESTNET_RPC
     );
 
 
     // wallet from encrypted key
 
     const encryptedJson = fs.readFileSync(
-        "$gol/blockchain/.encryptedKey.json", "utf-8"
+        "/home/gnostic/Golem/blockchain/.encryptedKey.json", "utf-8"
     );
 
     let wallet = new ethers.Wallet.fromEncryptedJsonSync(
         encryptedJson,
-        proces.env.CODEC_PASS
+        process.env.CODEC_PASS
     )
 
     wallet = await wallet.connect(provider);
@@ -39,9 +39,13 @@ async function main() {
     //     );
 
 
-    const abiDir = "../artifacts/contracts";
-    const contractABI = "fundMe.sol/FundMe.json";
-    const contractBin = "fundMe.sol/FundMe.dbg.json";
+    const abiDir = "/home/gnostic/Golem/blockchain/artifacts/contracts/";
+    const contractABI =
+        // "store.sol/Stored.json";
+        "contracts_store_sol_Stored.abi";
+    const contractBin =
+        // "store.sol/Stored.dbg.json";
+        "contracts_store_sol_Stored.bin";
 
     const abi = fs.readFileSync(
         abiDir + contractABI,
@@ -53,15 +57,7 @@ async function main() {
         "utf-8"
     );
 
-    const contractFactory = await ethers.getContractFactory(abi, binary, wallet);
-
-    // const Contract = await ethers.getContractFactory("FundMe");
-
-    const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-    const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-    const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
-
-    //   const lockedAmount = hre.ethers.utils.parseEther("1");
+    const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
 
     console.log(`Deploying`);
     const contract = await contractFactory.deploy(
@@ -77,20 +73,10 @@ async function main() {
     console.log('\n transaction receipt: \n');
     console.log(transactionReceipt);
 
-    const minUSD = await contract.minUSD.toString();
+    const Num = await contract.Num();
 
-    console.log(`Minimum USD is:`, minUSD);
+    console.log(`stored Number is:`, Num.toString());
 
-
-    let owner, addr1, addr2;
-
-    [owner, addr1, addr2, _] = ethers.getSigners();
-
-    await contract.deployed();
-
-    console.log(
-        `at ${unlockTime} deployed to ${contract.address} by ${owner}`
-    );
 }
 
 // We recommend this pattern to be able to use async/await everywhere

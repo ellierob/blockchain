@@ -10,7 +10,7 @@ async function main() {
         process.env.GANACHE_PRIVATE_KEY
     )
     console.log(encryptedJsonKey)
-    fs.writeFileSync("$gol/blockchain/.encryptedKey.json", encryptedJsonKey)
+    fs.writeFileSync("/home/gnostic/Golem/blockchain/.encryptedKey.json", encryptedJsonKey)
 }
 
 main()

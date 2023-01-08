@@ -4,7 +4,7 @@ require("dotenv").config()
 
 async function main() {
     const encryptedJson = fs.readFileSync(
-        "$gol/blockchain/.encryptedKey.json", "utf-8"
+        "/home/gnostic/Golem/blockchain/.encryptedKey.json", "utf-8"
     );
 
 

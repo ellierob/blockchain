@@ -16,19 +16,26 @@ async function main() {
         process.env.LOCAL_TESTNET_RPC
     );
 
+    const ethChainID = 1337;
+
     const encryptedJson = fs.readFileSync(
-        "$gol/blockchain/.encryptedKey.json", "utf-8"
+        "/home/gnostic/Golem/blockchain/.encryptedKey.json", "utf-8"
     );
 
     let wallet = new ethers.Wallet.fromEncryptedJsonSync(
         encryptedJson,
-        proces.env.CODEC_PASS
+        process.env.CODEC_PASS
     );
 
-    const abiDir = "../artifacts/contracts";
-    const contractABI = "fundMe.sol/FundMe.json";
-    const contractBin = "fundMe.sol/FundMe.dbg.json";
+    wallet = await wallet.connect(provider);
 
+    const abiDir = "/home/gnostic/Golem/blockchain/artifacts/contracts/";
+    const contractABI =
+        // "store.sol/Stored.json";
+        "contracts_store_sol_Stored.abi";
+    const contractBin =
+        // "store.sol/Stored.dbg.json";
+        "contracts_store_sol_Stored.bin";
     const abi = fs.readFileSync(
         abiDir + contractABI,
         "utf8"
@@ -43,12 +50,6 @@ async function main() {
 
     // const Contract = await ethers.getContractFactory("FundMe");
 
-    const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-    const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-    const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
-
-    //   const lockedAmount = hre.ethers.utils.parseEther("1");
-
     console.log(`Deploying`);
 
     const txRaw = {
@@ -61,23 +62,19 @@ async function main() {
             binary
         // "0xBin"
         ,
-        chainId: 1337,
+        chainId: ethChainID,
     };
 
-    const txSigned = await wallet.signTransaction(tx);
+    const txSigned = await wallet.signTransaction(txRaw);
 
     console.log('\n signed transaction: \n', txSigned);
 
     const txSent = await wallet.sendTransaction(
         // txSigned
-        tx
+        txRaw
     )
 
     console.log(`\n sent transaction: \n`, sentTx);
-
-    console.log(
-        `at ${unlockTime} deployed to ${contract.address} by ${owner}`
-    );
 
 }
 
