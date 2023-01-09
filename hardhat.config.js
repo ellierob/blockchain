@@ -32,6 +32,7 @@ module.exports = {
       url: process.env.ALCHEMY_GOERLI_TESTNET_RPC_URL,
       chainId: 5,
       accounts: [process.env.TEST_PRIVATE_KEY],
+      blockConfirmations: 6,
     },
     localhost: {
       url: "http://127.0.0.1:8545",

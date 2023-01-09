@@ -1,5 +1,6 @@
 const { devNets, networkConfig } = require("../helper-hardhat-config");
 const { network } = require("hardhat");
+const verify = require("../utils/verify");
 
 module.exports =
     async (
@@ -31,8 +32,20 @@ module.exports =
                 from: deployer,
                 args: [priceFeed],
                 log: true,
+                waitConfirmations: network.config.blockConfirmations || 1,
             }
         )
+
+        log('deployed fundme');
+
+        if (
+            !devNets.includes(network.name) &&
+            process.env.ETHERSCAN_API_KEY
+        ) {
+            await verify(contract.address, [priceFeed]);
+        }
+
+        log('-------------------------');
     }
 
 module.exports.tags = ["all", "fundMe"];
