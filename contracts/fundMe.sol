@@ -12,7 +12,7 @@ import "./priceConverter.sol";
 
 // custom revert errors stored outside contracts
 // takes less gas than require
-error fundMe_notOwner();
+error FundMe__NotOwner();
 
 /* @title crowd funding
  * @author Farhan Absar
@@ -27,26 +27,28 @@ contract FundMe {
    // variables that will be constant after once set
    // constants and immutables store directly in bytecode at deploy,
    // rather than storage slot
-   // address public immutable owner;
-   address public owner;
+   // address public immutable owner prefixed with _i;
+   // so to not store in storage
+   address private i_owner;
 
-   address[] public funders;
+   // storage variables prefixed with s_
+   address[] private s_funders;
 
-   AggregatorV3Interface public priceFeed;
+   AggregatorV3Interface private s_priceFeed;
 
-   mapping(address => uint256) public funderToAmo;
+   mapping(address => uint256) private s_funderToAmo;
 
    //$2 seen raised to 10 ** 18
    //6000000 gwei
    // setting constants take less less gas
-   // constants are all-caps
+   // constants are all-caps to not store in storage
    uint256 public constant MINUSD = 2000000000000000000;
 
    // like middleware
    // only owner
    modifier onlyOwner() {
-      if (msg.sender != owner) {
-         revert fundMe_notOwner();
+      if (msg.sender != i_owner) {
+         revert FundMe__NotOwner();
       }
       // custom error reverts stored outside contract
       // takes less gas than require
@@ -61,8 +63,8 @@ contract FundMe {
    // https://docs.chain.link/data-feeds/price-feeds/addresses/#Goerli%20Testnet
    constructor(address _priceFeedAddress) {
       //sets owner to whoever deploys the construct
-      owner = msg.sender;
-      priceFeed = AggregatorV3Interface(_priceFeedAddress);
+      i_owner = msg.sender;
+      s_priceFeed = AggregatorV3Interface(_priceFeedAddress);
    }
 
    // special functions: "receive"
@@ -89,14 +91,14 @@ contract FundMe {
       require(
          // valueInUSD(msg.value) >= MINUSD,
          // first argument of library functions is same as caller
-         msg.value.valueInUSD(priceFeed) >= MINUSD,
+         msg.value.valueInUSD(s_priceFeed) >= MINUSD,
          // message if requirement is not met
          "More ETH required"
       );
 
-      funderToAmo[msg.sender] = msg.value;
+      s_funderToAmo[msg.sender] = msg.value;
 
-      funders.push(msg.sender);
+      s_funders.push(msg.sender);
 
       // ETH -> USD
    }
@@ -121,17 +123,36 @@ contract FundMe {
 
       require(success, "Send failed");
 
+      // optimized memory variable
+      address[] memory funders = s_funders;
+
       for (uint256 funderInd = 0; funderInd < funders.length; funderInd++) {
          address funder = funders[funderInd];
-         funderToAmo[funder] = 0;
+         s_funderToAmo[funder] = 0;
       }
 
       // makes funders array blank
-      funders = new address[](0);
+      s_funders = new address[](0);
+   }
+
+   function getOwner() public view returns (address) {
+      return i_owner;
+   }
+
+   function getFunders(uint256 idx) public view returns (address) {
+      return s_funders[idx];
+   }
+
+   function getFunderToAmo(address _funder) public view returns (uint256) {
+      return s_funderToAmo[_funder];
+   }
+
+   function getPriceFeed() public view returns (AggregatorV3Interface) {
+      return s_priceFeed;
    }
 
    function changeOwner(address _newOwner) public onlyOwner {
-      owner = _newOwner;
+      i_owner = _newOwner;
    }
 
    // function getVer() public view returns (uint256){
