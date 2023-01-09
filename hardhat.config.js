@@ -4,6 +4,7 @@ require("@nomicfoundation/hardhat-toolbox");
 require("@nomiclabs/hardhat-etherscan");
 require("dotenv").config();
 require("./tasks/block-number.js");
+// require("hardhat-deploy");
 require("hardhat-gas-reporter");
 
 /** @type import('hardhat/config').HardhatUserConfig */
@@ -29,8 +30,8 @@ module.exports = {
       saveDeployments: true,
       deploy: ['deploy-goerliAlchemy/'],
       url: process.env.ALCHEMY_GOERLI_TESTNET_RPC_URL,
-      accounts: [process.env.TEST_PRIVATE_KEY],
       chainId: 5,
+      accounts: [process.env.TEST_PRIVATE_KEY],
     },
     localhost: {
       url: "http://127.0.0.1:8545",
@@ -46,6 +47,12 @@ module.exports = {
       }
     }
   },
+  // namedAccounts: {
+  //   deployer: {
+  //     default: 0,
+
+  //   }
+  // },
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,
   },

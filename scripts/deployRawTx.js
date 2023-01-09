@@ -16,18 +16,25 @@ async function main() {
         process.env.LOCAL_TESTNET_RPC
     );
 
-    const ethChainID = 1337;
+    // const encryptedJson = fs.readFileSync(
+    //     "/home/gnostic/Golem/blockchain/.encryptedKey.json", "utf-8"
+    // );
 
-    const encryptedJson = fs.readFileSync(
-        "/home/gnostic/Golem/blockchain/.encryptedKey.json", "utf-8"
-    );
+    // let wallet = new ethers.Wallet.fromEncryptedJsonSync(
+    //     encryptedJson,
+    //     process.env.CODEC_PASS
+    // );
 
-    let wallet = new ethers.Wallet.fromEncryptedJsonSync(
-        encryptedJson,
-        process.env.CODEC_PASS
-    );
+    // wallet = await wallet.connect(provider);
 
-    wallet = await wallet.connect(provider);
+    const wallet =
+        new ethers.Wallet(
+            // private key of waller
+            // process.env.GANACHE_PRIVATE_KEY,
+            process.env.HARDHAT_PRIVATE_KEY,
+            // process.env.TEST_PRIVATE_KEY,
+            provider
+        );
 
     const abiDir = "/home/gnostic/Golem/blockchain/artifacts/contracts/";
     const contractABI =
@@ -52,17 +59,42 @@ async function main() {
 
     console.log(`Deploying`);
 
+    // const ganacheGasPrice = 20000000000;
+    const hardhatGasPrice = 22838160372;
+    // const goerliGasPrice = 22838160372;
+
+
+    // const ganacheGasLimit = 100000;
+    const hardhatGasLimit = 1000000;
+
+    // const ganacheEthChainID = 1337;
+    const hardhatEthChainID = 31337;
+
+    const payee =
+        new ethers.Wallet(
+            // private key of waller
+            // process.env.GANACHE_PRIVATE_KEY,
+            process.env.HARDHAT_PRIVATE_KEY2,
+            // process.env.TEST_PRIVATE_KEY3,
+            provider
+        );
+
+
     const txRaw = {
         nonce: await wallet.getTransactionCount(),
-        gasPrice: 20000000000,
-        gasLimit: 100000,
+        gasPrice: await provider.getGasPrice(),
+        gasLimit: hardhatGasLimit,
         to: null,
+        // to: payee,
+        // to: process.env.HARDHAT_PRIVATE_KEY2,
+        // value: 10000,
         value: 0,
         data:
+            "0x" +
             binary
         // "0xBin"
         ,
-        chainId: ethChainID,
+        chainId: hardhatEthChainID,
     };
 
     const txSigned = await wallet.signTransaction(txRaw);
@@ -74,7 +106,7 @@ async function main() {
         txRaw
     )
 
-    console.log(`\n sent transaction: \n`, sentTx);
+    console.log(`\n sent transaction: \n`, txSent);
 
 }
 

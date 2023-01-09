@@ -7,8 +7,9 @@ async function main() {
     const wallet = new ethers.Wallet(process.env.GANACHE_PRIVATE_KEY)
     const encryptedJsonKey = await wallet.encrypt(
         process.env.CODEC_PASS,
-        // process.env.GANACHE_PRIVATE_KEY
-        process.env.TEST_PRIVATE_KEY
+        process.env.GANACHE_PRIVATE_KEY
+        // process.env.HARDHAT_PRIVATE_KEY
+        // process.env.TEST_PRIVATE_KEY
     )
     console.log(encryptedJsonKey)
     fs.writeFileSync("/home/gnostic/Golem/blockchain/.encryptedKey.json", encryptedJsonKey)
