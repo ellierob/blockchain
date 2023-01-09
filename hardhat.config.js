@@ -4,7 +4,7 @@ require("@nomicfoundation/hardhat-toolbox");
 require("@nomiclabs/hardhat-etherscan");
 require("dotenv").config();
 require("./tasks/block-number.js");
-// require("hardhat-deploy");
+require("hardhat-deploy");
 require("hardhat-gas-reporter");
 
 /** @type import('hardhat/config').HardhatUserConfig */
@@ -47,12 +47,12 @@ module.exports = {
       }
     }
   },
-  // namedAccounts: {
-  //   deployer: {
-  //     default: 0,
+  namedAccounts: {
+    deployer: {
+      default: 0,
 
-  //   }
-  // },
+    }
+  },
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,
   },

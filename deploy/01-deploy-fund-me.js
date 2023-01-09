@@ -1,4 +1,4 @@
-const { networkConfig } = require("../helper-hardhat-config");
+const { devNets, networkConfig } = require("../helper-hardhat-config");
 const { network } = require("hardhat");
 
 module.exports =
@@ -14,7 +14,16 @@ module.exports =
         const { deployer } = await getNamedAccounts();
         const chainId = network.config.chainId;
 
-        const priceFeed = networkConfig[chainId].ethUsdPriceFeed;
+        let priceFeed;
+
+        if (devNets.includes(network.name)) {
+            log("local network detected! getting mocks price feed");
+            const aggregator = await deployments.get("MockV3Aggregator");
+            priceFeed = aggregator.address;
+        } else {
+            priceFeed = networkConfig[chainId].ethUsdPriceFeed;
+        }
+
 
         const contract = await deploy(
             "FundMe",
@@ -25,3 +34,5 @@ module.exports =
             }
         )
     }
+
+module.exports.tags = ["all", "fundMe"];

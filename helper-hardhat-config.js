@@ -5,6 +5,13 @@ const networkConfig = {
     }
 }
 
+const devNets = ["hardhat", "localhost"];
+const DECIMALS = 8;
+const INITIAL_ANSWER = 200000000;
+
 module.exports = {
     networkConfig,
+    devNets,
+    DECIMALS,
+    INITIAL_ANSWER,
 }
