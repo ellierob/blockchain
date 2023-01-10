@@ -23,7 +23,7 @@ module.exports = {
         },
       }]
   },
-  defaultNetwork: "hardhat",
+  // defaultNetwork: "hardhat",
   networks: {
     goerliAlchemy: {
       live: true,

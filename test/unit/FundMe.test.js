@@ -14,7 +14,7 @@ describe("FundMe", function () {
         console.log(deployer);
 
         // @dev hardhat-deploy deploys contract by tag
-        await deployments.fixture(["all"]);
+        // await deployments.fixture(["mockFundMe"]);
 
         // hardhat deploy gets recently deployed contract
         mockV3Aggregator = await ethers.getContract(
@@ -44,7 +44,7 @@ describe("FundMe", function () {
         // ethers.utils.parseEther("1");
         "1000000000000000";
 
-    describe("fun", async () => {
+    describe("fund", async () => {
 
         it("should fail to fund without amount", async () => {
             await expect(fundMe.fund()).to.be.revertedWith(
@@ -130,8 +130,8 @@ describe("FundMe", function () {
             )
             await expect(
                 fundMeConnectedContract.wdraw()
-                // ).to.be.revertedWith("FundMe__NotOwner");
-            ).to.be.reverted;
+            ).to.be.revertedWith("FundMe__NotOwner()");
+            // ).to.be.reverted;
         })
     })
 

@@ -24,9 +24,13 @@
     "solc": "^0.8.17"
   },
   "scripts": {
-    "start": "yarn hardhat 1_storage.sol",
-    "start[dev]": "yarn hardhat 1_storage.sol",
-    "compile": "yarn solcjs --bin --abi --include-path $gol/blockchain/node_modules/ --base-path $gol/blockchain/ -o $gol/blockchain//articats/contracts/"
+    "start": "yarn hardhat node",
+    "compile": "yarn solcjs --bin --abi --include-path $gol/blockchain/node_modules/ --base-path $gol/blockchain/ -o $gol/blockchain//articats/contracts/",
+    "test": "yarn hardhat test --network localhost",
+    "test:staging": "yarn hardhat test --network goerliAlchemy",
+    "lint": "yarn solhint 'contracts/*.sol",
+    "lint:fix": "yarn solhint 'contracts/*.sol --fix",
+    "format": "yarn prettier --write"
   },
   "name": "blockchain",
   "version": "1.0.0",
