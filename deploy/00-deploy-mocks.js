@@ -45,4 +45,4 @@ module.exports =
         }
     }
 
-module.exports.tags = ["all", "mocks"];
+module.exports.tags = ["all", "mocks", "mockFundMe"];

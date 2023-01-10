@@ -11,6 +11,8 @@ describe("FundMe", function () {
 
         deployer = (await getNamedAccounts()).deployer;
 
+        console.log(deployer);
+
         // @dev hardhat-deploy deploys contract by tag
         await deployments.fixture(["all"]);
 

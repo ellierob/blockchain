@@ -48,4 +48,4 @@ module.exports =
         log('-------------------------');
     }
 
-module.exports.tags = ["all", "fundMe"];
+module.exports.tags = ["all", "fundMe", "mockFundMe"];

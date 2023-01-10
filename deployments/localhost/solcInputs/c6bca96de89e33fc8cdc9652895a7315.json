@@ -1,0 +1,44 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/fundMe.sol": {
+      "content": "// SPDX-License-Identifier: MIT\r\n\r\npragma solidity >=0.6.0 <0.9.0;\r\n\r\n//imports from @chainlink npm package, interface instead of contract\r\n//interfaces complie down to ABI (application binary interface)\r\n//allows to interact with listed funcions in another contract\r\n// allows passing oracle contract address contract\r\nimport \"@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol\";\r\n\r\nimport \"./priceConverter.sol\";\r\n\r\n// custom revert errors stored outside contracts\r\n// takes less gas than require\r\nerror FundMe__NotOwner();\r\n\r\n/* @title crowd funding\r\n * @author Farhan Absar\r\n * @notice fund me, good people\r\n * @dev does it work?\r\n */\r\n\r\ncontract FundMe {\r\n   // @dev makes 'PriceConverter' library functions methods of uint256\r\n   using PriceConverter for uint256;\r\n\r\n   // variables that will be constant after once set\r\n   // constants and immutables store directly in bytecode at deploy,\r\n   // rather than storage slot\r\n   // address public immutable owner prefixed with _i;\r\n   // so to not store in storage\r\n   address private i_owner;\r\n\r\n   // storage variables prefixed with s_\r\n   address[] private s_funders;\r\n\r\n   AggregatorV3Interface private s_priceFeed;\r\n\r\n   mapping(address => uint256) private s_funderToAmo;\r\n\r\n   //$2 seen raised to 10 ** 18\r\n   //6000000 gwei\r\n   // setting constants take less less gas\r\n   // constants are all-caps to not store in storage\r\n   uint256 public constant MINUSD = 2000000000000000000;\r\n\r\n   // like middleware\r\n   // only owner\r\n   modifier onlyOwner() {\r\n      if (msg.sender != i_owner) {\r\n         revert FundMe__NotOwner();\r\n      }\r\n      // custom error reverts stored outside contract\r\n      // takes less gas than require\r\n      // require(msg.sender == owner,'You are not the owner');\r\n\r\n      //runs the modified function /code after the require statement\r\n      _;\r\n   }\r\n\r\n   // 0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e\r\n   // eth to usd pricefeed address from\r\n   // https://docs.chain.link/data-feeds/price-feeds/addresses/#Goerli%20Testnet\r\n   constructor(address _priceFeedAddress) {\r\n      //sets owner to whoever deploys the construct\r\n      i_owner = msg.sender;\r\n      s_priceFeed = AggregatorV3Interface(_priceFeedAddress);\r\n   }\r\n\r\n   // special functions: \"receive\"\r\n   // called when call data empty\r\n   receive() external payable {\r\n      fund();\r\n   }\r\n\r\n   // special functions: \"fallback\"\r\n   // called when no defined receive function when call data empty\r\n   // and when invalid call data method\r\n   fallback() external payable {\r\n      fund();\r\n   }\r\n\r\n   //'payable' keyword makes a function payable (red)\r\n   function fund() public payable {\r\n      //if statement can be replaced by shorter required statement\r\n      //if(msg.value < MINUSD){\r\n      //    revert?\r\n      //}\r\n\r\n      // any transaction before\r\n      require(\r\n         // valueInUSD(msg.value) >= MINUSD,\r\n         // first argument of library functions is same as caller\r\n         msg.value.valueInUSD(s_priceFeed) >= MINUSD,\r\n         // message if requirement is not met\r\n         \"More ETH required\"\r\n      );\r\n\r\n      s_funderToAmo[msg.sender] = msg.value;\r\n\r\n      s_funders.push(msg.sender);\r\n\r\n      // ETH -> USD\r\n   }\r\n\r\n   function wdraw() public onlyOwner {\r\n      //keyword 'this' refers to contract\r\n      //whose balance is transfered\r\n      //to sender /caller\r\n\r\n      // transfer automatically reverts if send fails\r\n      // payable(msg.sender).transfer(address(this).balance);\r\n\r\n      // call is powerful low lever function\r\n      // allows sending token without gas\r\n      // allows calling methods on contracts\r\n      // but also can modify properties on addresses\r\n      (bool success, ) = payable(msg.sender).call{value: address(this).balance}(\r\n         \"\"\r\n      );\r\n\r\n      // bool success = payable(msg.sender).send(address(this).balance);\r\n\r\n      require(success, \"Send failed\");\r\n\r\n      // optimized memory variable\r\n      address[] memory funders = s_funders;\r\n\r\n      for (uint256 funderInd = 0; funderInd < funders.length; funderInd++) {\r\n         address funder = funders[funderInd];\r\n         s_funderToAmo[funder] = 0;\r\n      }\r\n\r\n      // makes funders array blank\r\n      s_funders = new address[](0);\r\n   }\r\n\r\n   function getOwner() public view returns (address) {\r\n      return i_owner;\r\n   }\r\n\r\n   function getFunders(uint256 idx) public view returns (address) {\r\n      return s_funders[idx];\r\n   }\r\n\r\n   function getFunderToAmo(address _funder) public view returns (uint256) {\r\n      return s_funderToAmo[_funder];\r\n   }\r\n\r\n   function getPriceFeed() public view returns (AggregatorV3Interface) {\r\n      return s_priceFeed;\r\n   }\r\n\r\n   function changeOwner(address _newOwner) public onlyOwner {\r\n      i_owner = _newOwner;\r\n   }\r\n\r\n   // function getVer() public view returns (uint256){\r\n   //     AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);\r\n   //     return priceFeed.version();\r\n   // }\r\n\r\n   // function ethToUSD() public view returns(uint256) {\r\n   //     AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);\r\n\r\n   //     //commas without variable in tuple to ignore variables\r\n   //     (,int256 answer,,,) = priceFeed.latestRoundData();\r\n\r\n   //     return uint256(answer);\r\n   // }\r\n\r\n   // function valueInUSD(uint256 _ethAmo) public view returns (uint256){\r\n   //     uint256 ethPrice = ethToUSD();\r\n   //     uint256 ethInUsd = (ethPrice * _ethAmo) /100000000;\r\n   //     return ethInUsd;\r\n   // }\r\n}\r\n"
+    },
+    "contracts/priceConverter.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.7;\n\n// ABI interface of the oracle contract\nimport \"@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol\";\n\n// libraries are unpayable contracts without state variables\n// they can be turned into methods for objects, classes, datatypes\nlibrary PriceConverter {\n  // uses chainlink oracle contract aggregator\n  // takes address of contract as argument\n  function ethToUSD(AggregatorV3Interface priceFeed)\n    internal\n    view\n    returns (uint256)\n  {\n    // returns in eth rate * 10^8\n    (, int256 answer, , , ) = priceFeed.latestRoundData();\n    \n    // typecast int to uint\n    // ETH/USD 10^8, \n    // into 10^10 to get 18 digits gwei\n    return uint256(answer * 10000000000);\n  }\n\n  // 1000000000\n  // call it get fiatConversionRate, since it assumes something about decimals\n  // It wouldn't work for every aggregator\n  // first argument of library function is same as caller\n  function valueInUSD(uint256 ethAmount, AggregatorV3Interface priceFeed)\n    internal\n    view\n    returns (uint256)\n  {\n    uint256 ethPrice = ethToUSD(priceFeed);\n    \n    // divide by 10^18 to get usd\n    uint256 ethAmountInUsd = (ethPrice * ethAmount) / 1000000000000000000;\n    // the actual ETH/USD conversation rate, after adjusting the extra 0s.\n    return ethAmountInUsd;\n  }\n}"
+    },
+    "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\ninterface AggregatorV3Interface {\n  function decimals() external view returns (uint8);\n\n  function description() external view returns (string memory);\n\n  function version() external view returns (uint256);\n\n  function getRoundData(uint80 _roundId)\n    external\n    view\n    returns (\n      uint80 roundId,\n      int256 answer,\n      uint256 startedAt,\n      uint256 updatedAt,\n      uint80 answeredInRound\n    );\n\n  function latestRoundData()\n    external\n    view\n    returns (\n      uint80 roundId,\n      int256 answer,\n      uint256 startedAt,\n      uint256 updatedAt,\n      uint80 answeredInRound\n    );\n}\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 200,
+      "details": {
+        "yul": false
+      }
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}
