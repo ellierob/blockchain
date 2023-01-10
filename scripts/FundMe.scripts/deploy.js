@@ -47,20 +47,13 @@ async function main() {
         // unlockTime, { value: lockedAmount }
     );
 
-    // const deployResponse = contract.deployTransaction
-    // console.log(`\n deployment (transaction response): \n`);
-    // console.log(deployResponse);
-
-    // // waits for 1 block confirmation
-    // const transactionReceipt = await deployResponse.wait(1);
-    // console.log('\n transaction receipt: \n');
-    // console.log(transactionReceipt);
-
     const contactAddr = await contract.address;
 
     const deployer = await contract.signer.getAddress();
 
     console.log(`contract deployed at ${contactAddr} by ${deployer}`);
+
+    // fs.writeFileSync()
 
     if (network.chainId == 5 && process.env.ETHERSCAN_API_KEY) {
         await contract.deployTransaction.wait(6);

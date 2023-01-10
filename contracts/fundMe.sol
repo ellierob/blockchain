@@ -77,7 +77,9 @@ contract FundMe {
    // called when no defined receive function when call data empty
    // and when invalid call data method
    fallback() external payable {
-      fund();
+      if (msg.value > 0) {
+         fund();
+      }
    }
 
    //'payable' keyword makes a function payable (red)
