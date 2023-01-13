@@ -4,5 +4,5 @@ cache
 artifacts.BAK
 .encryptedKey.json
 gas-report.txt
-./deployments/
-./artifacts/
+deployments/
+artifacts/
